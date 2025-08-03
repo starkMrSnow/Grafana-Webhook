@@ -1,13 +1,14 @@
 package Grafana.webhook.service;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,20 +16,21 @@ public class EmailSender {
 
     private final JavaMailSender javaMailSender;
 
-    public void sendEmailWithImage(String to, String subject, String htmlBody, byte[] imageBytes) throws MessagingException {
+    public void sendEmailWithAttachments(String to, String subject, String htmlBody, List<EmbeddedImage> images) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
-
-        // true = multipart message
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setFrom("175dollarsnow@gmail.com"); // Optional override
-
-        // Embed the image inline using a CID (Content-ID)
+        helper.setFrom("sidian@gmail.com");
         helper.setText(htmlBody, true);
-        helper.addInline("grafana-image", new ByteArrayResource(imageBytes), "image/png");
+
+        for (EmbeddedImage img : images) {
+            helper.addInline(img.contentId(), new ByteArrayResource(img.bytes()), "image/png");
+        }
 
         javaMailSender.send(message);
     }
-    
+
+    public record EmbeddedImage(String contentId, byte[] bytes) {}
 }
