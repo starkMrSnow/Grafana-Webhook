@@ -28,15 +28,16 @@ public class TestEmailController {
                 </html>
                 """;
 
-            byte[] imageBytes = grafanaImageFetcher.fetchImage("/render/d-solo/8fd2bd26-02c9-4766-af1a-1f8147e7c0ca/new-dashboard?orgId=1&panelId=1&width=1000&height=500&tz=UTC\n" + //
+            byte[] imageBytes = grafanaImageFetcher.fetchImage("https://mevin.online/grafana/render/d-solo/cetw573guhb0gf/new-dashboard?orgId=1&panelId=1&width=1000&height=500"
++ //
                                 "");
 
-            emailSender.sendEmailWithImage(
-                    "stanleyonyango84@gmail.com",  // Replace with your test recipient
-                    "Grafana Alert: Service Down",
-                    html,
-                    imageBytes
-            );
+            // emailSender.sendEmailWithImage(
+            //         "stanleyonyango84@gmail.com",  // Replace with your test recipient
+            //         "Grafana Alert: Service Down",
+            //         html,
+            //         imageBytes
+            // );
 
             return "✅ Email sent successfully!";
         } catch (MessagingException e) {
@@ -45,4 +46,5 @@ public class TestEmailController {
             return "❌ Error fetching image: " + e.getMessage();
         }
     }
+    
 }

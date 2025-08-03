@@ -1,17 +1,14 @@
 package Grafana.webhook.util;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 public class GrafanaImageFetcher {
-     @Value("${grafana.base-url}")
+
+    @Value("${grafana.base-url}")
     private String grafanaBaseUrl;
 
     @Value("${grafana.api-key}")
@@ -20,13 +17,19 @@ public class GrafanaImageFetcher {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public byte[] fetchImage(String panelRenderPath) throws Exception {
+        // Ensure no double slash if base-url ends with / and path starts with /
         String fullUrl = panelRenderPath.startsWith("http")
                 ? panelRenderPath
-                : grafanaBaseUrl + panelRenderPath;
+                : grafanaBaseUrl.replaceAll("/$", "") + "/" + panelRenderPath.replaceAll("^/", "");
+
+        System.out.println("Fetching image from: " + fullUrl);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + grafanaApiKey);
-        headers.setAccept(MediaType.parseMediaTypes("image/png"));
+
+        if ( grafanaApiKey != null && !grafanaApiKey.isBlank()) {
+            headers.set("Authorization", "Bearer " + grafanaApiKey);
+        }
+        headers.setAccept(MediaType.parseMediaTypes("image/png")); 
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -37,11 +40,11 @@ public class GrafanaImageFetcher {
                 byte[].class
         );
 
+
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
         } else {
-            throw new RuntimeException("Failed to fetch image: " + response.getStatusCode());
+            throw new RuntimeException("❌ Failed to fetch image: " + response.getStatusCode());
         }
     }
-
 }
