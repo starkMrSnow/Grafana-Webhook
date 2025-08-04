@@ -27,8 +27,8 @@ public class EmailAlertService {
         int count = 1;
 
         for (JsonNode alert : alertJson.path("alerts")) {
-            String alertName = alert.path("labels").path("alertname").asText();
-            String severity = alert.path("labels").path("severity").asText();
+            String alertName = alert.path("labels").path("alertname").asText("Unknown Alert");        
+            String severity = alert.path("labels").path("severity").asText("N/A");
             String summary = alert.path("annotations").path("summary").asText();
             String panelPath = alert.path("labels").path("panelPath").asText();
 
@@ -79,7 +79,7 @@ public class EmailAlertService {
 
         try {
             emailSender.sendEmailWithAttachments(
-                    "stanleyonyango84@gmail.com",
+                    "stanley.otieno@giktek.io ",
                     "🚨 Sidian Alert Notification",
                     finalHtmlBody,
                     imageAttachments
