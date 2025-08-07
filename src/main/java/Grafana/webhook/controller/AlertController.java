@@ -9,11 +9,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import Grafana.webhook.service.EmailAlertService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/alerts")
 public class AlertController {
     
