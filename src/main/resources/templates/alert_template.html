@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidian Alert Notification</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h2 style="color: #333; border-bottom: 2px none; padding-bottom: 10px;">🚨 Sidian Alerts</h2>
+        
+        <div th:each="alert : ${alerts}" style="margin-bottom:20px;">
+            <h3 style="color: #444;" th:text="${alert.alertName} + ' [' + ${alert.severity} + ']'">AlertName [Severity]</h3>
+            <p style="color: #666;" th:text="${alert.summary}">Summary goes here.</p>
+            
+            <img th:if="${alert.contentId != null}" th:src="'cid:' + ${alert.contentId}" style="max-width:100%; border:1px solid #ccc;" />
+            <p th:if="${alert.contentId == null}" style="color:red;">⚠️ Failed to load alert image.</p>
+        </div>
+    </div>
+</body>
+</html>

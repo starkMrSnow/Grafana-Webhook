@@ -1,0 +1,23 @@
+server:
+  port: 3000
+
+spring:
+  application:
+    name: grafana-webhook
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 
+    password: 
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
+
+grafana:
+  base-url:    # change to http://grafana.monitoring.svc.cluster.local:3000
+  api-key:

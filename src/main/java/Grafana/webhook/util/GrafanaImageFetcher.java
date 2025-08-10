@@ -20,7 +20,9 @@ public class GrafanaImageFetcher {
         // Ensure no double slash if base-url ends with / and path starts with /
         String fullUrl = panelRenderPath.startsWith("http")
                 ? panelRenderPath
+
                 : grafanaBaseUrl.replaceAll("/$", "") + "/" + panelRenderPath.replaceAll("^/", "");
+
 
         System.out.println("Fetching image from: " + fullUrl);
 

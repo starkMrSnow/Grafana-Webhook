@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.email-container {
+    max-width: 600px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.alert-block {
+    margin-bottom: 20px;
+}
+
+.alert-title {
+    color: #444;
+}
+
+.alert-summary {
+    color: #666;
+}
+
+.alert-image {
+    max-width: 100%;
+    border: 1px solid #ccc;
+}
+
+.error-message {
+    color: red;
+}
