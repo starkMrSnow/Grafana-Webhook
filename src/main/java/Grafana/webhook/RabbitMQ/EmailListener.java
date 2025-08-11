@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import Grafana.webhook.dto.EmailMessageDto;
 import Grafana.webhook.service.EmailSender;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,19 +19,20 @@ public class EmailListener {
     @Autowired  
     private EmailSender emailSender;
 
+    private EmailMessageDto message;
+
     @RabbitListener(queues = "emailQueue")
-    public void handleEmailMessage(Map<String, Object> message){
+    public void handleEmailMessage(EmailMessageDto message){
 
         log.info("received message successfully");
 
         try {
-            String to = (String) message.get("to");
-            String subject = (String) message.get("subject");
-            String body = (String) message.get("body");
-            List<EmailSender.EmbeddedImage> images = (List<EmailSender.EmbeddedImage>) message.get("images");
-
-            emailSender.sendEmailWithAttachments(to, subject, body, images);
-            log.info("email sent successfully afyer receiving from queue");
+          emailSender.sendEmailWithAttachments(
+           message.getTo(),
+           message.getSubject(),
+           message.getBody(),
+           message.getImages());
+            log.info("email sent successfully after receiving from queue");
         } catch (MessagingException e) {
             log.error("failed to send email after receiving from queue: {}", e.getMessage());
         }
