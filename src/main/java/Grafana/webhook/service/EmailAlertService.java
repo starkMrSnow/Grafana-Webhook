@@ -1,20 +1,31 @@
 package Grafana.webhook.service;
 
+import Grafana.webhook.RabbitMQ.RabbitMQConfig;
 import Grafana.webhook.util.GrafanaImageFetcher;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
+
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Service
 @Slf4j
 public class EmailAlertService {
+   
+    @Autowired
+    private RabbitMQConfig rabbitMQConfig;
 
     @Autowired
     private GrafanaImageFetcher imageFetcher;
@@ -24,6 +35,9 @@ public class EmailAlertService {
 
     @Autowired 
     private TemplateEngine templateEngine;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
    
     public record AlertData(String alertName, String severity, String summary, String contentId) {}
@@ -49,6 +63,7 @@ public class EmailAlertService {
                 imageAttachments.add(new EmailSender.EmbeddedImage(contentId, imageBytes));
                 alertDataList.add(new AlertData(alertName, severity, summary, contentId));
 
+
             } catch (Exception e) {
                 log.error("Error fetching image for alert '{}': {}", alertName, e.getMessage());
                 // If the image fails, pass 'null' for the contentId to show the error message in the template
@@ -58,7 +73,7 @@ public class EmailAlertService {
             count++;
         }
 
-        // Create a Thymeleaf context and add the list of alerts
+       
         Context context = new Context();
         context.setVariable("alerts", alertDataList);
 
@@ -66,16 +81,24 @@ public class EmailAlertService {
         String finalHtmlBody = templateEngine.process("alert_template", context);
 
         try {
-            emailSender.sendEmailWithAttachments(
-                    "stanley.otieno@giktek.io ",
-                    "🚨 Sidian Alert Notification",
-                    finalHtmlBody,
-                    imageAttachments
-            );
-            log.info("Email sent successfully");
+            // emailSender.sendEmailWithAttachments(
+            //         "stanley.otieno@giktek.io ",
+            //         "🚨 Sidian Alert Notification",
+            //         finalHtmlBody,
+            //         imageAttachments
+            // );
+            Map<String, Object> emailMessage = new HashMap<>();
+            emailMessage.put( "to", "stanley.otieno@giktek.io");
+            emailMessage.put("subject","🚨 Sidian Alert Notification");
+            emailMessage.put("body", finalHtmlBody);
+            emailMessage.put("images", imageAttachments);
 
-        } catch (MessagingException e) {
-            log.error("Failed to send email: {}", e.getMessage());
+            rabbitTemplate.convertAndSend("emailExchange", "emailQueue", emailMessage);
+
+            log.info("Email sent to queue successfully");
+
+        } catch (Exception e) {
+            log.error("Failed to send email to the queue");
         }
     }
 }

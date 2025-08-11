@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Service
@@ -33,5 +34,5 @@ public class EmailSender {
         javaMailSender.send(message);
     }
 
-    public record EmbeddedImage(String contentId, byte[] bytes) {}
+    public record EmbeddedImage(String contentId, byte[] bytes) implements Serializable {}
 }

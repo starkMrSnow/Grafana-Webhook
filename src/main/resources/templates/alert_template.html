@@ -13,7 +13,7 @@
             <p style="color: #666;" th:text="${alert.summary}">Summary goes here.</p>
             
             <img th:if="${alert.contentId != null}" th:src="'cid:' + ${alert.contentId}" style="max-width:100%; border:1px solid #ccc;" />
-            <p th:if="${alert.contentId == null}" style="color:red;">⚠️ Failed to load alert image.</p>
+            <p th:if="${alert.contentId == null}" style="color:red;">⚠️ Failed to load the dashboard image.</p>
         </div>
     </div>
 </body>
