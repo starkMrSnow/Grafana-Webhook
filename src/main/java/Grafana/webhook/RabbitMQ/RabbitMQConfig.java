@@ -44,12 +44,6 @@ public class RabbitMQConfig {
         return connectionFactory;
     }
 
-    // @Bean
-    // public MessageConverter messageConverter() {
-    //     SimpleMessageConverter converter = new SimpleMessageConverter();
-    //     converter.setAllowedListPatterns(List.of("java.util.*", "Grafana.webhook.service.*"));
-    //     return converter;
-    // }
 
     @Bean
     public Queue emailQueue() {
@@ -69,20 +63,6 @@ public class RabbitMQConfig {
           .with(QUEUE_NAME);
     }
 
-    // @Bean
-    // public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-    //     final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-    //     rabbitTemplate.setMessageConverter(messageConverter());
-    //     return rabbitTemplate;
-    // }
-
-    // @Bean
-    // public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
-    //     SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-    //     factory.setConnectionFactory(connectionFactory);
-    //     factory.setMessageConverter(messageConverter());
-    //     return factory;
-    // }
 
     @Bean
     public MessageConverter messageConverter(){

@@ -77,16 +77,11 @@ public class EmailAlertService {
         Context context = new Context();
         context.setVariable("alerts", alertDataList);
 
-        // Process the template to generate the final HTML string
+    
         String finalHtmlBody = templateEngine.process("alert_template", context);
 
         try {
-            // emailSender.sendEmailWithAttachments(
-            //         "stanley.otieno@giktek.io ",
-            //         "🚨 Sidian Alert Notification",
-            //         finalHtmlBody,
-            //         imageAttachments
-            // );
+           
             Map<String, Object> emailMessage = new HashMap<>();
             emailMessage.put( "to", "stanley.otieno@giktek.io");
             emailMessage.put("subject","🚨 Sidian Alert Notification");
