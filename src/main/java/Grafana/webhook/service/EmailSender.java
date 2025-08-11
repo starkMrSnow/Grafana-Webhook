@@ -27,6 +27,7 @@ public class EmailSender {
 
         for (EmbeddedImage img : images) {
             helper.addInline(img.contentId(), new ByteArrayResource(img.bytes()), "image/png");
+   
         }
 
         javaMailSender.send(message);
