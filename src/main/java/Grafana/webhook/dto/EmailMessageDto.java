@@ -4,6 +4,7 @@ import java.util.List;
 
 import Grafana.webhook.service.EmailSender.EmbeddedImage;
 
+
 public class EmailMessageDto {
     private String to;
     private String subject;

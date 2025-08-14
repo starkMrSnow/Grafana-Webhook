@@ -1,8 +1,5 @@
 package Grafana.webhook.RabbitMQ;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +16,7 @@ public class EmailListener {
     @Autowired  
     private EmailSender emailSender;
 
-    private EmailMessageDto message;
+    // private EmailMessageDto message;
 
     @RabbitListener(queues = "emailQueue")
     public void handleEmailMessage(EmailMessageDto message){
